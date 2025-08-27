@@ -11,9 +11,11 @@ Uma aplicação web profissional e elegante para gerenciar uma franquia de salõ
 - **Cards de salão** com:
   - Logo do salão
   - Nome e avaliação
-  - Endereço, telefone e horário
+  - Endereço clicável que abre Google Maps
+  - Telefone e horário
   - Lista de serviços
   - Botão para visitar o site
+- **Botão de busca** para encontrar salões por endereço
 - **Botão flutuante** de acesso administrativo
 
 ### 🔐 Painel Administrativo
@@ -35,13 +37,14 @@ Uma aplicação web profissional e elegante para gerenciar uma franquia de salõ
 - **React Router** para navegação
 - **Lucide React** para ícones
 - **Context API** para gerenciamento de estado
+- **Google Maps API** para localização
 
 ## 📦 Instalação
 
 1. **Clone o repositório:**
 ```bash
-git clone <url-do-repositorio>
-cd franquia-saloes
+git clone https://github.com/msa1980/saloesonline.git
+cd saloesonline
 ```
 
 2. **Instale as dependências:**
@@ -73,6 +76,8 @@ Para acessar o painel administrativo:
 ### Página Pública
 - ✅ Exibição de salões em grid responsivo
 - ✅ Cards com informações completas de cada salão
+- ✅ Endereços clicáveis que abrem Google Maps
+- ✅ Busca por endereço com popup interativo
 - ✅ Botões para visitar sites dos salões
 - ✅ Design moderno e profissional
 - ✅ Animações suaves e elegantes
@@ -84,6 +89,7 @@ Para acessar o painel administrativo:
 - ✅ Ativação/desativação de salões
 - ✅ Interface intuitiva e responsiva
 - ✅ Validação de formulários
+- ✅ Suporte a múltiplos serviços por salão
 
 ## 📱 Responsividade
 
@@ -147,6 +153,8 @@ src/
 - **Hover effects** interativos
 - **Backdrop filters** para transparências
 - **Grid responsivo** que se adapta a qualquer tela
+- **Integração com Google Maps** para localização
+- **Busca inteligente** por nome e endereço
 
 ## 🚀 Deploy
 
@@ -179,4 +187,3 @@ Se você tiver alguma dúvida ou problema, abra uma issue no repositório.
 ---
 
 **Desenvolvido com ❤️ para criar uma experiência incrível para franquias de salões!**
-
