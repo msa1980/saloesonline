@@ -158,7 +158,38 @@ src/
 
 ## 🚀 Deploy
 
-Para fazer o deploy em produção:
+### Deploy no Vercel (Recomendado)
+
+Este projeto está otimizado para deploy no Vercel:
+
+1. **Instale a CLI do Vercel:**
+```bash
+npm i -g vercel
+```
+
+2. **Faça login no Vercel:**
+```bash
+vercel login
+```
+
+3. **Deploy do projeto:**
+```bash
+vercel
+```
+
+4. **Para deploy de produção:**
+```bash
+vercel --prod
+```
+
+**Ou via GitHub:**
+1. Conecte seu repositório ao Vercel
+2. O deploy será automático a cada push
+3. Configurações já estão no `vercel.json`
+
+### Deploy Manual
+
+Para outros serviços de hospedagem:
 
 1. **Build da aplicação:**
 ```bash
