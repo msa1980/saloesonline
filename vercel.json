@@ -1,11 +1,4 @@
 {
-  {
-  "name": "seu-projeto",
-  "version": "1.0.0",
-  "engines": {
-    "node": "18.x"
-  }
-}
   "version": 2,
   "name": "saloes-online",
   "buildCommand": "npm run build",
