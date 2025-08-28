@@ -1,6 +1,6 @@
 {
-  "name": "seu-projeto",
-  "version": "1.0.0",
+  "version": 2,
+  "name": "saloes-online",
   "buildCommand": "npm run build",
   "outputDirectory": "build",
   "rewrites": [
