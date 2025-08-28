@@ -1,11 +1,11 @@
 import emailjs from '@emailjs/browser';
 
 // Configurações do EmailJS
-// IMPORTANTE: Substitua essas configurações pelas suas próprias do EmailJS
 const EMAIL_CONFIG = {
-  serviceId: 'service_w5g2jch', // Substitua pelo seu Service ID
-  templateId: 'template_x1gx44o', // Substitua pelo seu Template ID
-  publicKey: 'w2Io_MJvyX9tKv2PQ', // Substitua pela sua Public Key
+  serviceId: 'service_w5g2jch',
+  templateId: 'template_x1gx44o', 
+  publicKey: 'w2Io_MJvyX9tKv2PQ',
+  privateKey: 'oIzRWOTpNQOQ7flPTN47w', // Private Key para uso no servidor se necessário
 };
 
 export interface ClienteData {
@@ -18,12 +18,22 @@ export interface ClienteData {
 
 export const enviarCadastroCliente = async (dados: ClienteData): Promise<boolean> => {
   try {
+    // Validar dados obrigatórios
+    if (!dados.nome || !dados.email || !dados.telefone) {
+      throw new Error('Dados obrigatórios não fornecidos (nome, email, telefone)');
+    }
+
+    // Validar configuração do EmailJS
+    if (!EMAIL_CONFIG.serviceId || !EMAIL_CONFIG.templateId || !EMAIL_CONFIG.publicKey) {
+      throw new Error('Configuração do EmailJS incompleta');
+    }
+
     // Inicializar EmailJS com a chave pública
     emailjs.init(EMAIL_CONFIG.publicKey);
 
     // Preparar os dados para o template
     const templateParams = {
-      to_name: 'Administrador', // Nome do destinatário
+      to_name: 'Administrador',
       from_name: dados.nome,
       from_email: dados.email,
       phone: dados.telefone,
@@ -31,6 +41,12 @@ export const enviarCadastroCliente = async (dados: ClienteData): Promise<boolean
       message: dados.mensagem || 'Nenhuma mensagem adicional',
       reply_to: dados.email,
     };
+
+    console.log('Enviando email com parâmetros:', {
+      serviceId: EMAIL_CONFIG.serviceId,
+      templateId: EMAIL_CONFIG.templateId,
+      templateParams
+    });
 
     // Enviar email
     const response = await emailjs.send(
@@ -41,8 +57,25 @@ export const enviarCadastroCliente = async (dados: ClienteData): Promise<boolean
 
     console.log('Email enviado com sucesso:', response);
     return true;
-  } catch (error) {
-    console.error('Erro ao enviar email:', error);
+  } catch (error: any) {
+    console.error('Erro detalhado ao enviar email:', {
+      message: error.message,
+      status: error.status,
+      text: error.text,
+      error: error
+    });
+    
+    // Verificar tipos específicos de erro
+    if (error.status === 400) {
+      console.error('Erro 400: Parâmetros inválidos ou template não encontrado');
+    } else if (error.status === 401) {
+      console.error('Erro 401: Chave pública inválida ou não autorizada');
+    } else if (error.status === 404) {
+      console.error('Erro 404: Service ID ou Template ID não encontrado');
+    } else if (error.message?.includes('network') || error.message?.includes('fetch')) {
+      console.error('Erro de conectividade: Verifique sua conexão com a internet');
+    }
+    
     return false;
   }
 };
@@ -50,9 +83,9 @@ export const enviarCadastroCliente = async (dados: ClienteData): Promise<boolean
 // Função para validar configuração do EmailJS
 export const isEmailConfigured = (): boolean => {
   return (
-    EMAIL_CONFIG.serviceId !== 'service_w5g2jch' &&
-    EMAIL_CONFIG.templateId !== 'template_x1gx44o' &&
-    EMAIL_CONFIG.publicKey !== 'w2Io_MJvyX9tKv2PQ'
+    EMAIL_CONFIG.serviceId !== '' &&
+    EMAIL_CONFIG.templateId !== '' &&
+    EMAIL_CONFIG.publicKey !== ''
   );
 };
 
