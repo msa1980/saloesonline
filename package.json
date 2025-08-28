@@ -2,6 +2,9 @@
   "name": "franquia-saloes",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": "18.x"
+  },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "@types/node": "^16.18.0",
