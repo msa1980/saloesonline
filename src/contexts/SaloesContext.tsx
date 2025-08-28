@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { saloesService, storageService, isSupabaseConfigured, Salao as SupabaseSalao } from '../services/supabaseService';
-import { autoMigrateIfNeeded } from '../utils/migrateToSupabase';
 
 export interface Salao {
   id: string;
@@ -171,19 +170,7 @@ export const SaloesProvider: React.FC<SaloesProviderProps> = ({ children }) => {
 
   // Carregar salões na inicialização
   useEffect(() => {
-    const initializeData = async () => {
-      // Tentar migração automática se necessário
-      try {
-        await autoMigrateIfNeeded();
-      } catch (error) {
-        console.error('Erro na migração automática:', error);
-      }
-      
-      // Carregar dados
-      await refreshSaloes();
-    };
-    
-    initializeData();
+    refreshSaloes();
   }, []);
 
   const addSalao = async (salao: Omit<Salao, 'id'>) => {
