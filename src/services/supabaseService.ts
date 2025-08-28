@@ -1,17 +1,30 @@
 import { createClient } from '@supabase/supabase-js'
 
 // Configurações do Supabase
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL!
-const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY!
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || 'https://placeholder.supabase.co'
+const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY || 'placeholder-key'
 
 // Verificar se as variáveis de ambiente estão configuradas
-if (!supabaseUrl || !supabaseKey || 
-    supabaseUrl === 'https://seu-projeto.supabase.co' || 
-    supabaseKey === 'sua-chave-publica-aqui') {
-  console.warn('⚠️ Supabase não configurado. Configure as variáveis no .env.local')
+const isConfigured = supabaseUrl && supabaseKey && 
+    supabaseUrl !== 'https://seu-projeto.supabase.co' && 
+    supabaseUrl !== 'https://placeholder.supabase.co' &&
+    supabaseKey !== 'sua-chave-publica-aqui' &&
+    supabaseKey !== 'placeholder-key'
+
+if (!isConfigured) {
+  console.warn('⚠️ Supabase não configurado. Usando dados locais como fallback.')
 }
 
 export const supabase = createClient(supabaseUrl, supabaseKey)
+
+// Função para verificar se o Supabase está configurado
+export const isSupabaseConfigured = (): boolean => {
+  return !!(supabaseUrl && supabaseKey && 
+    supabaseUrl !== 'https://seu-projeto.supabase.co' && 
+    supabaseUrl !== 'https://placeholder.supabase.co' &&
+    supabaseKey !== 'sua-chave-publica-aqui' &&
+    supabaseKey !== 'placeholder-key')
+}
 
 // Interfaces
 export interface Salao {
@@ -260,13 +273,7 @@ export const storageService = {
   }
 }
 
-// Função para verificar se o Supabase está configurado
-export const isSupabaseConfigured = (): boolean => {
-  return !!(supabaseUrl && 
-           supabaseKey && 
-           supabaseUrl !== 'https://seu-projeto.supabase.co' && 
-           supabaseKey !== 'sua-chave-publica-aqui')
-}
+
 
 // Função para testar conexão
 export const testConnection = async (): Promise<boolean> => {
