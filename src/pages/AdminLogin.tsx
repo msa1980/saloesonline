@@ -112,10 +112,7 @@ const AdminLogin: React.FC = () => {
             </ErrorMessage>
           )}
           
-          <SecurityNotice>
-            <SecurityTitle>🔒 Sistema Seguro</SecurityTitle>
-            <SecurityText>Autenticação protegida com hash bcrypt e rate limiting</SecurityText>
-          </SecurityNotice>
+
         </motion.div>
       </LoginContainer>
     </PageContainer>
@@ -300,26 +297,7 @@ const ErrorMessage = styled(motion.div)`
   font-weight: 500;
 `;
 
-const SecurityNotice = styled.div`
-  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-  border: 1px solid #bae6fd;
-  border-radius: ${({ theme }) => theme.borderRadius.medium};
-  padding: ${({ theme }) => theme.spacing.md};
-  text-align: center;
-`;
 
-const SecurityTitle = styled.h4`
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: #0369a1;
-  margin-bottom: ${({ theme }) => theme.spacing.xs};
-`;
-
-const SecurityText = styled.p`
-  font-size: 1.2rem;
-  color: #0284c7;
-  margin: 0;
-`;
 
 export default AdminLogin;
 
