@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { useSaloes, Salao } from '../contexts/SaloesContext';
 import { isAuthenticated as checkAuth, logout, validateToken } from '../services/authService';
+import MigrationPanel from '../components/MigrationPanel';
 
 interface FormData {
   nome?: string;
@@ -23,7 +24,7 @@ interface FormData {
 }
 
 const AdminDashboard: React.FC = () => {
-  const { saloes, addSalao, updateSalao, deleteSalao, toggleSalaoStatus } = useSaloes();
+  const { saloes, addSalao, updateSalao, deleteSalao, toggleSalaoStatus, uploadLogo, loading, error } = useSaloes();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
@@ -62,68 +63,91 @@ const AdminDashboard: React.FC = () => {
     navigate('/admin');
   };
 
-  const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLogoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const base64String = e.target?.result as string;
-        setFormData({ ...formData, logo: base64String });
-      };
-      reader.readAsDataURL(file);
+      try {
+        // Para novos salões, usar um ID temporário
+        const tempId = `temp-${Date.now()}`;
+        const logoUrl = await uploadLogo(file, tempId);
+        if (logoUrl) {
+          setFormData({ ...formData, logo: logoUrl });
+        }
+      } catch (error) {
+        console.error('Erro ao fazer upload da logo:', error);
+        alert('Erro ao fazer upload da logo. Tente novamente.');
+      }
     }
   };
 
-  const handleEditLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEditLogoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const base64String = e.target?.result as string;
-        setFormData({ ...formData, logo: base64String });
-      };
-      reader.readAsDataURL(file);
+    if (file && editingSalao) {
+      try {
+        const logoUrl = await uploadLogo(file, editingSalao.id);
+        if (logoUrl) {
+          setFormData({ ...formData, logo: logoUrl });
+        }
+      } catch (error) {
+        console.error('Erro ao fazer upload da logo:', error);
+        alert('Erro ao fazer upload da logo. Tente novamente.');
+      }
     }
   };
 
-  const handleAddSalao = () => {
+  const handleAddSalao = async () => {
     if (formData.nome && formData.endereco && formData.telefone) {
-      addSalao({
-        nome: formData.nome,
-        endereco: formData.endereco,
-        telefone: formData.telefone,
-        email: formData.email || '',
-        logo: formData.logo || '',
-        siteUrl: formData.siteUrl || '',
-        horarioFuncionamento: formData.horarioFuncionamento || '',
-        servicos: typeof formData.servicos === 'string' 
-          ? formData.servicos.split(',').map((s: string) => s.trim()).filter((s: string) => s)
-          : formData.servicos || [],
-        descricao: formData.descricao || '',
-        ativo: true,
-      });
-      setFormData({});
-      setShowAddForm(false);
+      try {
+        await addSalao({
+          nome: formData.nome,
+          endereco: formData.endereco,
+          telefone: formData.telefone,
+          email: formData.email || '',
+          logo: formData.logo || '',
+          siteUrl: formData.siteUrl || '',
+          horarioFuncionamento: formData.horarioFuncionamento || '',
+          servicos: typeof formData.servicos === 'string' 
+            ? formData.servicos.split(',').map((s: string) => s.trim()).filter((s: string) => s)
+            : formData.servicos || [],
+          descricao: formData.descricao || '',
+          ativo: true,
+        });
+        setFormData({});
+        setShowAddForm(false);
+      } catch (error) {
+        console.error('Erro ao adicionar salão:', error);
+        alert('Erro ao adicionar salão. Tente novamente.');
+      }
     }
   };
 
-  const handleUpdateSalao = () => {
+  const handleUpdateSalao = async () => {
     if (editingSalao && formData.nome) {
-      const updatedData = {
-        ...formData,
-        servicos: typeof formData.servicos === 'string' 
-          ? formData.servicos.split(',').map((s: string) => s.trim()).filter((s: string) => s)
-          : formData.servicos || []
-      };
-      updateSalao(editingSalao.id, updatedData);
-      setEditingSalao(null);
-      setFormData({});
+      try {
+        const updatedData = {
+          ...formData,
+          servicos: typeof formData.servicos === 'string' 
+            ? formData.servicos.split(',').map((s: string) => s.trim()).filter((s: string) => s)
+            : formData.servicos || []
+        };
+        await updateSalao(editingSalao.id, updatedData);
+        setEditingSalao(null);
+        setFormData({});
+      } catch (error) {
+        console.error('Erro ao atualizar salão:', error);
+        alert('Erro ao atualizar salão. Tente novamente.');
+      }
     }
   };
 
-  const handleDeleteSalao = (id: string) => {
+  const handleDeleteSalao = async (id: string) => {
     if (window.confirm('Tem certeza que deseja excluir este salão?')) {
-      deleteSalao(id);
+      try {
+        await deleteSalao(id);
+      } catch (error) {
+        console.error('Erro ao excluir salão:', error);
+        alert('Erro ao excluir salão. Tente novamente.');
+      }
     }
   };
 
@@ -138,6 +162,18 @@ const AdminDashboard: React.FC = () => {
 
   return (
     <DashboardContainer>
+      {error && (
+        <ErrorMessage>
+          {error}
+        </ErrorMessage>
+      )}
+      
+      {loading && (
+        <LoadingOverlay>
+          <LoadingSpinner />
+          <LoadingText>Carregando...</LoadingText>
+        </LoadingOverlay>
+      )}
       <Header>
         <HeaderContent>
           <BackButton onClick={() => navigate('/')}>
@@ -175,6 +211,8 @@ const AdminDashboard: React.FC = () => {
             Adicionar Salão
           </AddButton>
         </ControlsSection>
+
+        <MigrationPanel />
 
         {showAddForm && (
           <motion.div
@@ -345,7 +383,7 @@ const AdminDashboard: React.FC = () => {
                 <TableCell>
                   <StatusToggle
                     onClick={() => toggleSalaoStatus(salao.id)}
-                    $active={salao.ativo}
+                    $active={salao.ativo ?? true}
                   >
                     {salao.ativo ? <Eye size={16} /> : <EyeOff size={16} />}
                     {salao.ativo ? 'Ativo' : 'Inativo'}
@@ -973,6 +1011,50 @@ const UploadButton = styled.button`
 
 const HiddenFileInput = styled.input`
   display: none;
+`;
+
+const ErrorMessage = styled.div`
+  background: ${({ theme }) => theme.colors.error};
+  color: white;
+  padding: ${({ theme }) => theme.spacing.md};
+  margin: ${({ theme }) => theme.spacing.md};
+  border-radius: ${({ theme }) => theme.borderRadius.medium};
+  text-align: center;
+  font-weight: 500;
+`;
+
+const LoadingOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+`;
+
+const LoadingSpinner = styled.div`
+  width: 40px;
+  height: 40px;
+  border: 4px solid ${({ theme }) => theme.colors.border};
+  border-top: 4px solid ${({ theme }) => theme.colors.primary};
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+`;
+
+const LoadingText = styled.div`
+  margin-top: ${({ theme }) => theme.spacing.md};
+  color: ${({ theme }) => theme.colors.text};
+  font-weight: 500;
 `;
 
 export default AdminDashboard;

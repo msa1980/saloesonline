@@ -61,9 +61,9 @@ const SalaoCard: React.FC<SalaoCardProps> = ({ salao }) => {
         <ServicesContainer>
           <ServicesTitle>Serviços:</ServicesTitle>
           <ServicesList>
-            {salao.servicos.map((servico, index) => (
+            {salao.servicos?.map((servico, index) => (
               <ServiceTag key={index}>{servico}</ServiceTag>
-            ))}
+            )) || <ServiceTag>Nenhum serviço cadastrado</ServiceTag>}
           </ServicesList>
         </ServicesContainer>
         
