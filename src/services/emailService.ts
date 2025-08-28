@@ -3,9 +3,9 @@ import emailjs from '@emailjs/browser';
 // Configurações do EmailJS
 // IMPORTANTE: Substitua essas configurações pelas suas próprias do EmailJS
 const EMAIL_CONFIG = {
-  serviceId: 'service_xxxxxxx', // Substitua pelo seu Service ID
-  templateId: 'template_xxxxxxx', // Substitua pelo seu Template ID
-  publicKey: 'xxxxxxxxxxxxxxx', // Substitua pela sua Public Key
+  serviceId: 'service_w5g2jch', // Substitua pelo seu Service ID
+  templateId: 'template_x1gx44o', // Substitua pelo seu Template ID
+  publicKey: 'w2Io_MJvyX9tKv2PQ', // Substitua pela sua Public Key
 };
 
 export interface ClienteData {
@@ -50,9 +50,9 @@ export const enviarCadastroCliente = async (dados: ClienteData): Promise<boolean
 // Função para validar configuração do EmailJS
 export const isEmailConfigured = (): boolean => {
   return (
-    EMAIL_CONFIG.serviceId !== 'service_xxxxxxx' &&
-    EMAIL_CONFIG.templateId !== 'template_xxxxxxx' &&
-    EMAIL_CONFIG.publicKey !== 'xxxxxxxxxxxxxxx'
+    EMAIL_CONFIG.serviceId !== 'service_w5g2jch' &&
+    EMAIL_CONFIG.templateId !== 'template_x1gx44o' &&
+    EMAIL_CONFIG.publicKey !== 'w2Io_MJvyX9tKv2PQ'
   );
 };
 
