@@ -318,7 +318,9 @@ const FormGrid = styled.div`
   gap: ${({ theme }) => theme.spacing.md};
 `;
 
-const FormField = styled.div<{ fullWidth?: boolean }>`
+const FormField = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'fullWidth'
+})<{ fullWidth?: boolean }>`
   display: flex;
   flex-direction: column;
   gap: ${({ theme }) => theme.spacing.xs};

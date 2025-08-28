@@ -72,7 +72,7 @@ const SalaoCard: React.FC<SalaoCardProps> = ({ salao }) => {
 
       <CardActions>
         <VisitButton
-          href={salao.siteUrl}
+          href={salao.siteUrl && !salao.siteUrl.startsWith('http') ? `https://${salao.siteUrl}` : salao.siteUrl}
           target="_blank"
           rel="noopener noreferrer"
           whileHover={{ scale: 1.05 }}

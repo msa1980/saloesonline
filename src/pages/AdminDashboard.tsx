@@ -311,8 +311,8 @@ const AdminDashboard: React.FC = () => {
                   <Label>Serviços (separados por vírgula)</Label>
                   <Input
                     type="text"
-                    value={Array.isArray(formData.servicos) ? formData.servicos.join(', ') : ''}
-                    onChange={(e) => setFormData({ ...formData, servicos: e.target.value.split(',').map(s => s.trim()).filter(s => s) })}
+                    value={Array.isArray(formData.servicos) ? formData.servicos.join(', ') : formData.servicos || ''}
+                    onChange={(e) => setFormData({ ...formData, servicos: e.target.value })}
                     placeholder="Corte, Coloração, Tratamentos, Maquiagem"
                   />
                 </FormField>
@@ -676,7 +676,9 @@ const FormGrid = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;
 
-const FormField = styled.div<{ fullWidth?: boolean }>`
+const FormField = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== 'fullWidth'
+})<{ fullWidth?: boolean }>`
   ${({ fullWidth }) => fullWidth && 'grid-column: 1 / -1;'}
 `;
 

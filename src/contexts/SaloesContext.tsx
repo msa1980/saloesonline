@@ -142,11 +142,11 @@ export const SaloesProvider: React.FC<SaloesProviderProps> = ({ children }) => {
           telefone: salao.telefone || '',
           email: salao.email || '',
           logo: salao.logo_url || '/logos/default.svg',
-          siteUrl: '',
-          horarioFuncionamento: '',
-          servicos: [],
-          descricao: '',
-          ativo: true
+          siteUrl: salao.site_url || '',
+          horarioFuncionamento: salao.horario_funcionamento || '',
+          servicos: salao.servicos || [],
+          descricao: salao.descricao || '',
+          ativo: salao.ativo !== undefined ? salao.ativo : true
         }));
         
         setSaloes(formattedSaloes);
@@ -197,7 +197,12 @@ export const SaloesProvider: React.FC<SaloesProviderProps> = ({ children }) => {
           endereco: salao.endereco,
           telefone: salao.telefone,
           email: salao.email,
-          logo_url: salao.logo
+          logo_url: salao.logo,
+          site_url: salao.siteUrl,
+          horario_funcionamento: salao.horarioFuncionamento,
+          servicos: salao.servicos,
+          descricao: salao.descricao,
+          ativo: salao.ativo !== undefined ? salao.ativo : true
         };
         
         const { data, error } = await saloesService.createSalao(supabaseSalao);
@@ -232,11 +237,16 @@ export const SaloesProvider: React.FC<SaloesProviderProps> = ({ children }) => {
     try {
       if (isSupabaseConfigured()) {
         const updates: any = {};
-        if (salao.nome) updates.nome = salao.nome;
-        if (salao.endereco) updates.endereco = salao.endereco;
-        if (salao.telefone) updates.telefone = salao.telefone;
-        if (salao.email) updates.email = salao.email;
-        if (salao.logo) updates.logo_url = salao.logo;
+        if (salao.nome !== undefined) updates.nome = salao.nome;
+        if (salao.endereco !== undefined) updates.endereco = salao.endereco;
+        if (salao.telefone !== undefined) updates.telefone = salao.telefone;
+        if (salao.email !== undefined) updates.email = salao.email;
+        if (salao.logo !== undefined) updates.logo_url = salao.logo;
+        if (salao.siteUrl !== undefined) updates.site_url = salao.siteUrl;
+        if (salao.horarioFuncionamento !== undefined) updates.horario_funcionamento = salao.horarioFuncionamento;
+        if (salao.servicos !== undefined) updates.servicos = salao.servicos;
+        if (salao.descricao !== undefined) updates.descricao = salao.descricao;
+        if (salao.ativo !== undefined) updates.ativo = salao.ativo;
         
         const { error } = await saloesService.updateSalao(id, updates);
         if (error) {
