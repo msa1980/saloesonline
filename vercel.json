@@ -1,4 +1,9 @@
 {
+  "name": "seu-projeto",
+  "version": "1.0.0",
+  "engines": {
+    "node": "18.x"
+  },
   "buildCommand": "npm run build",
   "outputDirectory": "build",
   "rewrites": [
