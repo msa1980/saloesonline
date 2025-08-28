@@ -1,14 +1,14 @@
 import { createClient } from '@supabase/supabase-js'
 
 // Configurações do Supabase
-const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || 'https://placeholder.supabase.co'
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL || 'https://swkpsjovjtilyzuzobvi.supabase.co'
 const supabaseKey = process.env.REACT_APP_SUPABASE_ANON_KEY || 'placeholder-key'
 
 // Verificar se as variáveis de ambiente estão configuradas
 const isConfigured = supabaseUrl && supabaseKey && 
-    supabaseUrl !== 'https://seu-projeto.supabase.co' && 
-    supabaseUrl !== 'https://placeholder.supabase.co' &&
-    supabaseKey !== 'sua-chave-publica-aqui' &&
+    supabaseUrl !== 'https://swkpsjovjtilyzuzobvi.supabase.co' &&
+    supabaseUrl !== 'https://swkpsjovjtilyzuzobvi.supabase.co' &&
+    supabaseKey !== 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN3a3Bzam92anRpbHl6dXpvYnZpIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0OTMwMTAyMiwiZXhwIjoyMDY0ODc3MDIyfQ.vAn5A74lqhv8wwg7UfV9wKT1wRROy5kkm9ZOYaU8h34    ' &&
     supabaseKey !== 'placeholder-key'
 
 if (!isConfigured) {
@@ -20,9 +20,9 @@ export const supabase = createClient(supabaseUrl, supabaseKey)
 // Função para verificar se o Supabase está configurado
 export const isSupabaseConfigured = (): boolean => {
   return !!(supabaseUrl && supabaseKey && 
-    supabaseUrl !== 'https://seu-projeto.supabase.co' && 
-    supabaseUrl !== 'https://placeholder.supabase.co' &&
-    supabaseKey !== 'sua-chave-publica-aqui' &&
+    supabaseUrl !== 'https://swkpsjovjtilyzuzobvi.supabase.co' && 
+    supabaseUrl !== 'https://swkpsjovjtilyzuzobvi.supabase.co' &&
+    supabaseKey !== 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN3a3Bzam92anRpbHl6dXpvYnZpIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0OTMwMTAyMiwiZXhwIjoyMDY0ODc3MDIyfQ.vAn5A74lqhv8wwg7UfV9wKT1wRROy5kkm9ZOYaU8h34' &&
     supabaseKey !== 'placeholder-key')
 }
 

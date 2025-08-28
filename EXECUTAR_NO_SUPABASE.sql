@@ -12,6 +12,11 @@ CREATE TABLE IF NOT EXISTS public.saloes (
     telefone VARCHAR(20),
     email VARCHAR(255),
     logo_url TEXT,
+    site_url TEXT,
+    horario_funcionamento TEXT,
+    servicos JSONB DEFAULT '[]'::jsonb,
+    descricao TEXT,
+    ativo BOOLEAN DEFAULT true,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
