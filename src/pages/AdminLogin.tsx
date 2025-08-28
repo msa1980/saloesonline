@@ -2,28 +2,37 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Lock, User, Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import { Lock, User, Eye, EyeOff, ArrowLeft, AlertCircle } from 'lucide-react';
+import { authenticateUser } from '../services/authService';
 
 const AdminLogin: React.FC = () => {
   const [credentials, setCredentials] = useState({ username: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError('');
     
-    // Simulação de login (em produção, seria uma API real)
-    setTimeout(() => {
-      if (credentials.username === 'admin' && credentials.password === 'admin123') {
+    try {
+      const result = await authenticateUser(credentials.username, credentials.password);
+      
+      if (result.success && result.token) {
+        // Armazenar token de forma segura
+        localStorage.setItem('authToken', result.token);
         localStorage.setItem('adminAuthenticated', 'true');
         navigate('/admin/dashboard');
       } else {
-        alert('Credenciais inválidas! Use: admin / admin123');
+        setError(result.message);
       }
+    } catch (error) {
+      setError('Erro interno do servidor. Tente novamente.');
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   return (
@@ -92,11 +101,21 @@ const AdminLogin: React.FC = () => {
             </LoginButton>
           </LoginForm>
 
-          <DemoCredentials>
-            <DemoTitle>Credenciais de Demonstração:</DemoTitle>
-            <DemoText>Usuário: <strong>admin</strong></DemoText>
-            <DemoText>Senha: <strong>admin123</strong></DemoText>
-          </DemoCredentials>
+          {error && (
+            <ErrorMessage
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+            >
+              <AlertCircle size={16} />
+              {error}
+            </ErrorMessage>
+          )}
+          
+          <SecurityNotice>
+            <SecurityTitle>🔒 Sistema Seguro</SecurityTitle>
+            <SecurityText>Autenticação protegida com hash bcrypt e rate limiting</SecurityText>
+          </SecurityNotice>
         </motion.div>
       </LoginContainer>
     </PageContainer>
@@ -267,29 +286,39 @@ const LoginButton = styled(motion.button)`
   }
 `;
 
-const DemoCredentials = styled.div`
-  background: ${({ theme }) => theme.colors.surface};
-  border: 1px solid ${({ theme }) => theme.colors.border};
+const ErrorMessage = styled(motion.div)`
+  background: #fee2e2;
+  border: 1px solid #fecaca;
   border-radius: ${({ theme }) => theme.borderRadius.medium};
   padding: ${({ theme }) => theme.spacing.md};
-  text-align: left;
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  color: #dc2626;
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.xs};
+  font-size: 1.4rem;
+  font-weight: 500;
 `;
 
-const DemoTitle = styled.h4`
+const SecurityNotice = styled.div`
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 1px solid #bae6fd;
+  border-radius: ${({ theme }) => theme.borderRadius.medium};
+  padding: ${({ theme }) => theme.spacing.md};
+  text-align: center;
+`;
+
+const SecurityTitle = styled.h4`
   font-size: 1.4rem;
   font-weight: 600;
-  color: ${({ theme }) => theme.colors.text};
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  color: #0369a1;
+  margin-bottom: ${({ theme }) => theme.spacing.xs};
 `;
 
-const DemoText = styled.p`
-  font-size: 1.3rem;
-  color: ${({ theme }) => theme.colors.textLight};
-  margin-bottom: ${({ theme }) => theme.spacing.xs};
-  
-  &:last-child {
-    margin-bottom: 0;
-  }
+const SecurityText = styled.p`
+  font-size: 1.2rem;
+  color: #0284c7;
+  margin: 0;
 `;
 
 export default AdminLogin;

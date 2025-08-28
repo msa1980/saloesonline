@@ -7,6 +7,7 @@ import {
   Search, ArrowLeft, Save, X, Upload 
 } from 'lucide-react';
 import { useSaloes, Salao } from '../contexts/SaloesContext';
+import { isAuthenticated as checkAuth, logout, validateToken } from '../services/authService';
 
 interface FormData {
   nome?: string;
@@ -33,16 +34,31 @@ const AdminDashboard: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const auth = localStorage.getItem('adminAuthenticated');
-    if (!auth) {
+    // Verificar autenticação usando o novo sistema seguro
+    if (!checkAuth()) {
+      // Limpar dados antigos se existirem
+      localStorage.removeItem('adminAuthenticated');
+      localStorage.removeItem('authToken');
       navigate('/admin');
       return;
     }
+    
+    // Validar token periodicamente
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      const validation = validateToken(token);
+      if (!validation.valid) {
+        logout();
+        navigate('/admin');
+        return;
+      }
+    }
+    
     setIsAuthenticated(true);
   }, [navigate]);
 
   const handleLogout = () => {
-    localStorage.removeItem('adminAuthenticated');
+    logout(); // Usar função segura de logout
     navigate('/admin');
   };
 

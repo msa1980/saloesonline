@@ -67,9 +67,12 @@ http://localhost:3000
 Para acessar o painel administrativo:
 
 1. Clique no botão flutuante "Admin" no canto inferior direito
-2. Use as credenciais de demonstração:
-   - **Usuário:** `admin`
-   - **Senha:** `admin123`
+2. Entre com suas credenciais de administrador
+3. O sistema possui autenticação segura com:
+   - Senhas criptografadas com bcrypt
+   - Tokens JWT simulados
+   - Rate limiting para tentativas de login
+   - Validação de sessão automática
 
 ## 🎯 Funcionalidades Principais
 
